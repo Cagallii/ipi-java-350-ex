@@ -6,17 +6,20 @@ import com.ipiecoles.java.java350.model.Entreprise;
 import com.ipiecoles.java.java350.model.NiveauEtude;
 import com.ipiecoles.java.java350.model.Poste;
 import com.ipiecoles.java.java350.repository.EmployeRepository;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import java.time.LocalDate;
-
+import org.slf4j.LoggerFactory;
 @Service
 public class EmployeService {
 
     @Autowired
     private EmployeRepository employeRepository;
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Méthode enregistrant un nouvel employé dans l'entreprise
@@ -31,6 +34,11 @@ public class EmployeService {
      * @throws EntityExistsException Si le matricule correspond à un employé existant
      */
     public void embaucheEmploye(String nom, String prenom, Poste poste, NiveauEtude niveauEtude, Double tempsPartiel) throws EmployeException, EntityExistsException {
+
+        logger.debug("A DEBUG message");
+        logger.info("A INFO message");
+        logger.warn("A WARN message");
+        logger.error("A ERROR message");
 
         //Récupération du type d'employé à partir du poste
         String typeEmploye = poste.name().substring(0,1);
@@ -64,6 +72,7 @@ public class EmployeService {
         //Création et sauvegarde en BDD de l'employé.
         Employe employe = new Employe(nom, prenom, matricule, LocalDate.now(), salaire, Entreprise.PERFORMANCE_BASE, tempsPartiel);
 
+        logger.debug("Avant sauvegarde : {}", employe.toString());
         employeRepository.save(employe);
 
     }
