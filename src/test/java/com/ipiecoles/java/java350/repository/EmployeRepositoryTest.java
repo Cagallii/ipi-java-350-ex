@@ -5,12 +5,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 public class EmployeRepositoryTest {
 
@@ -22,6 +23,7 @@ public class EmployeRepositoryTest {
     public void setup(){
         employeRepository.deleteAll();
     }
+
     @Test
     public void testFindLastMatricule0Employe(){
         //Give
