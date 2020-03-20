@@ -1,5 +1,6 @@
 package com.ipiecoles.java.java350.model;
 
+import com.ipiecoles.java.java350.exception.EmployeException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -94,4 +95,63 @@ public class EmployeTest {
         //Then
         Assertions.assertThat(primeCalculee).isEqualTo(prime);
     }
+
+    @Test
+    public void testAugmenterSalaire10() throws EmployeException {
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(1000.0);
+
+        //When
+        employe.augmenterSalaire(10.0);
+        //Then
+
+        Assertions.assertThat(employe.getSalaire()).isEqualTo(1100.0);
+    }
+
+    @Test
+    public void testAgumenterSalairePourcentageSalNull() throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(null);
+
+        //When//Then
+        Assertions.assertThatThrownBy(() ->{employe.augmenterSalaire(10);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le salaire doit être un entier positif !");
+    }
+
+    @Test
+    public void testAgumenterSalairePourcentageSal0() throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(0.0);
+
+        //When//Then
+        Assertions.assertThatThrownBy(() ->{employe.augmenterSalaire(10);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le salaire doit être un entier positif !");
+    }
+
+    @Test
+    public void testAgumenterSalairePourcentageNegatif() throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(1000d);
+
+        //When//Then
+        Assertions.assertThatThrownBy(() ->{employe.augmenterSalaire(-10.0);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le pourcentage ne peut pas être négatif !");
+    }
+
+    @Test
+    public void testAgumenterSalairePourcentage0() throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(1000d);
+
+        //When//Then
+        Assertions.assertThatThrownBy(() ->{employe.augmenterSalaire(0.0);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le pourcentage ne peut pas être égal à zéro !");
+    }
+    //Je n'ai pas testé si le pourcentage pouvait être nul car un double par définition (Javadoc) ne peut pas être nul, sa valeur par défaut étant 0.0
+
 }

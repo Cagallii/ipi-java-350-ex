@@ -45,5 +45,21 @@ public class EmployeRepositoryTest {
         Assertions.assertThat(lastMatricule).isEqualTo("12345");
     }
 
+    @Test
+    public void testavgPerformanceWhereMatriculeStartsWith(){
+        //Give
+        Employe employe1 = employeRepository.save(new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 2, 1.0));
+        Employe employe2 = employeRepository.save(new Employe("Doe","Jane","C01234", LocalDate.now(),
+                1500d, 6, 1.0));
+        Employe employe3 = employeRepository.save(new Employe("Doe","Joe","C12345", LocalDate.now(),
+                1500d, 4, 1.0));
+        Employe employe4= employeRepository.save(new Employe("Doe","Jules","T01234", LocalDate.now(),
+                1500d, 1, 1.0));
 
+        //When
+        Double resultatMoyPerf = employeRepository.avgPerformanceWhereMatriculeStartsWith("C");
+        //Then
+        Assertions.assertThat(resultatMoyPerf).isEqualTo(4);
+    }
 }

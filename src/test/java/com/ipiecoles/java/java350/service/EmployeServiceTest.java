@@ -128,4 +128,149 @@ public class EmployeServiceTest {
             Assertions.assertThat(e.getMessage()).isEqualTo("Limite des 100000 matricules atteinte !");
         }
     }
+
+    @Test
+    public void testCalculPerformanceCommercialPerformance1() throws EmployeException{
+       //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 1, 1.0);
+        String matriculeRecherche = "C12345";
+        Long caTraite= 150000L;
+        Long objectifCa=100000L;
+        Mockito.when(employeRepository.findByMatricule("C12345")).thenReturn(employe1);
+        Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(1.0);
+        //When
+        employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);
+        //Then
+        ArgumentCaptor<Employe> employeCaptor = ArgumentCaptor.forClass((Employe.class));
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeCaptor.capture());
+        Assertions.assertThat(employeCaptor.getValue().getMatricule()).isEqualTo("C12345");
+        Assertions.assertThat(employeCaptor.getValue().getPerformance()).isEqualTo(6);
+    }
+    @Test
+    public void testCalculPerformanceCommercialSupPerformanceMoy() throws EmployeException{
+        //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 2, 1.0);
+        String matriculeRecherche = "C12345";
+        Long caTraite= 150000L;
+        Long objectifCa=100000L;
+        Mockito.when(employeRepository.findByMatricule("C12345")).thenReturn(employe1);
+        Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(1.0);
+        //When
+        employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);
+        //Then
+        ArgumentCaptor<Employe> employeCaptor = ArgumentCaptor.forClass((Employe.class));
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeCaptor.capture());
+        Assertions.assertThat(employeCaptor.getValue().getMatricule()).isEqualTo("C12345");
+        Assertions.assertThat(employeCaptor.getValue().getPerformance()).isEqualTo(7);
+    }
+    @Test
+    public void testCalculPerformanceCommercialCaTraiteNull() throws EmployeException{
+        //Given
+        String matriculeRecherche = "C12345";
+        Long caTraite= null;
+        Long objectifCa=100000L;
+        //When //Then
+        Assertions.assertThatThrownBy(() ->{employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le chiffre d'affaire traité ne peut être négatif ou null !");
+
+    }
+    @Test
+    public void testCalculPerformanceCommercialObjectifCaNull() throws EmployeException{
+        //Given
+        String matriculeRecherche = "C12345";
+        Long caTraite= 150000L;
+        Long objectifCa=null;
+        //When //Then
+        Assertions.assertThatThrownBy(() ->{employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);})
+                .isInstanceOf(EmployeException.class).hasMessage("L'objectif de chiffre d'affaire ne peut être négatif ou null !");
+
+    }
+    @Test
+    public void testCalculPerformanceCommercialObjectifMauvaisMatricule() throws EmployeException{
+        //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 1, 1.0);
+        String matriculeRecherche = "T12345";
+        Long caTraite= 150000L;
+        Long objectifCa=100000L;
+        //When //Then
+        Assertions.assertThatThrownBy(() ->{employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le matricule ne peut être null et doit commencer par un C !");
+
+    }
+
+    @Test
+    public void testCalculPerformanceCommercialSansMatricule() throws EmployeException{
+        //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 1, 1.0);
+        String matriculeRecherche = "C12345";
+        Long caTraite= 150000L;
+        Long objectifCa=100000L;
+        Mockito.when(employeRepository.findByMatricule("C12345")).thenReturn(null);
+
+        //When //Then
+        Assertions.assertThatThrownBy(() ->{employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le matricule " + matriculeRecherche + " n'existe pas !");
+
+    }
+
+    @Test
+    public void testCalculPerformanceCommercialPerformanceCas2() throws EmployeException{
+        //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 1, 1.0);
+        String matriculeRecherche = "C12345";
+        Long caTraite= 80000L;
+        Long objectifCa=100000L;
+        Mockito.when(employeRepository.findByMatricule("C12345")).thenReturn(employe1);
+        Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(1.0);
+        //When
+        employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);
+        //Then
+        ArgumentCaptor<Employe> employeCaptor = ArgumentCaptor.forClass((Employe.class));
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeCaptor.capture());
+        Assertions.assertThat(employeCaptor.getValue().getMatricule()).isEqualTo("C12345");
+        Assertions.assertThat(employeCaptor.getValue().getPerformance()).isEqualTo(1);
+    }
+
+    @Test
+    public void testCalculPerformanceCommercialPerformanceCas3() throws EmployeException{
+        //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 1, 1.0);
+        String matriculeRecherche = "C12345";
+        Long caTraite= 95000L;
+        Long objectifCa=100000L;
+        Mockito.when(employeRepository.findByMatricule("C12345")).thenReturn(employe1);
+        Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(1.0);
+        //When
+        employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);
+        //Then
+        ArgumentCaptor<Employe> employeCaptor = ArgumentCaptor.forClass((Employe.class));
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeCaptor.capture());
+        Assertions.assertThat(employeCaptor.getValue().getMatricule()).isEqualTo("C12345");
+        Assertions.assertThat(employeCaptor.getValue().getPerformance()).isEqualTo(1);
+    }
+
+    @Test
+    public void testCalculPerformanceCommercialPerformanceCas4() throws EmployeException{
+        //Given
+        Employe employe1 = new Employe("Doe","John","C12345", LocalDate.now(),
+                1500d, 1, 1.0);
+        String matriculeRecherche = "C12345";
+        Long caTraite= 110000L;
+        Long objectifCa=100000L;
+        Mockito.when(employeRepository.findByMatricule("C12345")).thenReturn(employe1);
+        Mockito.when(employeRepository.avgPerformanceWhereMatriculeStartsWith("C")).thenReturn(1.0);
+        //When
+        employeService.calculPerformanceCommercial(matriculeRecherche, caTraite,objectifCa);
+        //Then
+        ArgumentCaptor<Employe> employeCaptor = ArgumentCaptor.forClass((Employe.class));
+        Mockito.verify(employeRepository, Mockito.times(1)).save(employeCaptor.capture());
+        Assertions.assertThat(employeCaptor.getValue().getMatricule()).isEqualTo("C12345");
+        Assertions.assertThat(employeCaptor.getValue().getPerformance()).isEqualTo(3);
+    }
 }
