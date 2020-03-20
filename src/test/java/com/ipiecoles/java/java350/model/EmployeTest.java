@@ -110,6 +110,28 @@ public class EmployeTest {
     }
 
     @Test
+    public void testAgumenterSalairePourcentageSalNull() throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(null);
+
+        //When//Then
+        Assertions.assertThatThrownBy(() ->{employe.augmenterSalaire(10);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le salaire doit être un entier positif !");
+    }
+
+    @Test
+    public void testAgumenterSalairePourcentageSal0() throws EmployeException{
+        //Given
+        Employe employe = new Employe();
+        employe.setSalaire(0.0);
+
+        //When//Then
+        Assertions.assertThatThrownBy(() ->{employe.augmenterSalaire(10);})
+                .isInstanceOf(EmployeException.class).hasMessage("Le salaire doit être un entier positif !");
+    }
+
+    @Test
     public void testAgumenterSalairePourcentageNegatif() throws EmployeException{
         //Given
         Employe employe = new Employe();

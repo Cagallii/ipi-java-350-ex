@@ -109,15 +109,19 @@ public class Employe {
     //Augmenter salaire
     public void augmenterSalaire(double pourcentage) throws EmployeException {
 
-        if(pourcentage > 0) {
-            Double salaireAugmente =this.getSalaire() * (1 + (pourcentage/100));
-            this.setSalaire(salaireAugmente);
-        }else if(pourcentage < 0){
-            throw new EmployeException("Le pourcentage ne peut pas être négatif !");
-        }else if(pourcentage == 0){
-            throw new EmployeException("Le pourcentage ne peut pas être égal à zéro !");
+        if(salaire != null && salaire > 0) {
+            if (pourcentage > 0) {
+                Double salaireAugmente = this.getSalaire() * (1 + (pourcentage / 100));
+                this.setSalaire(salaireAugmente);
+            } else if (pourcentage < 0) {
+                throw new EmployeException("Le pourcentage ne peut pas être négatif !");
+            } else if (pourcentage == 0) {
+                throw new EmployeException("Le pourcentage ne peut pas être égal à zéro !");
+            } else {
+                throw new EmployeException("Une erreur est survenue, veuillez recommencer");
+            }
         }else{
-            throw new EmployeException("Une erreur est survenue, veuillez recommencer");
+            throw new EmployeException("Le salaire doit être un entier positif !");
         }
     }
     //Gymnastique mentale inconfortable au départ mais visiblement très utile !
